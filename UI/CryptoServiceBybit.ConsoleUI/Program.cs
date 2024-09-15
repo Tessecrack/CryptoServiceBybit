@@ -14,21 +14,39 @@ class Program
         try
         {
             //var tickersResponse = client.GetFromJsonAsync<TickersSpotInfo>("/tickers/spot/HUETA?token=1111").Result;
-            var response = client.GetAsync("/tickers/spot/HUETA?token=1111").Result;
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            var responseSpot = client.GetAsync("/api/tickers/spot").Result;
+            Thread.Sleep(1000);
+            var responseInverse = client.GetAsync("/api/tickers/inverse").Result;
+            if (responseSpot.StatusCode == System.Net.HttpStatusCode.OK 
+                && responseInverse.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                var tickersResponse = response.Content.ReadFromJsonAsync<TickersSpotInfo>().Result;
-                Console.WriteLine(tickersResponse.StatusCode);
-                Console.WriteLine(tickersResponse.Message);
-                foreach (var ticker in tickersResponse.Result.ListTickers)
+                var tickersSpotResponse = responseSpot.Content.ReadFromJsonAsync<TickersSpotInfo>().Result;
+                var tickersInverseResponse = responseInverse.Content.ReadFromJsonAsync<TickersInverseInfo>().Result;
+
+                var listSpotTickers = tickersSpotResponse.Result.ListTickers;
+                var listInverseTickers = tickersInverseResponse.Result.ListTickers;
+
+                var maxLength = Math.Max(listSpotTickers.Length, listInverseTickers.Length);
+                Console.WriteLine("symbols:");
+                for (int i = 0; i < maxLength; ++i)
                 {
-                    Console.WriteLine($"{ticker.Symbol}: {ticker.LastPrice}");
+                    if (i < listSpotTickers.Length)
+                    {
+                        Console.Write("SPOT: " + listSpotTickers[i].Symbol + " ");
+                    }
+                    if (i < listInverseTickers.Length)
+                    {
+                        Console.Write("INVERSE: " + listInverseTickers[i].Symbol + " ");
+                    }
+                    Console.WriteLine();
                 }
             }
             else
             {
-                Console.WriteLine(response.StatusCode);
+                Console.WriteLine(responseSpot.StatusCode);
             }
+
+
         }
         catch(Exception ex)
         {

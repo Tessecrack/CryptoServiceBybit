@@ -31,10 +31,10 @@ namespace CryptoServiceBybit.ServiceBybit
         }
 
         public async Task<PriceKlineInfo> GetPriceKline(string symbol = "BTCUSDT", int startTimeMs = 0, int endTimeMs = 0,
-             string interval = "D", string category = "spot", CancellationToken cancel = default)
+             string interval = "D", string category = "spot", int limit = 10, CancellationToken cancel = default)
         {
             var response = await _httpClient
-                .GetFromJsonAsync<PriceKlineInfo>($"/{_version}/market/kline?category={category}&symbol={symbol}&interval={interval}&start={startTimeMs}&end={endTimeMs}", cancel)
+                .GetFromJsonAsync<PriceKlineInfo>($"/{_version}/market/kline?category={category}&symbol={symbol}&interval={interval}&start={startTimeMs}&end={endTimeMs}&limit={limit}", cancel)
                 .ConfigureAwait(false);
 
             return response;
@@ -42,10 +42,10 @@ namespace CryptoServiceBybit.ServiceBybit
 
 
         public async Task<MarkPriceKlineInfo> GetMarkPriceKline(string symbol = "BTCUSDT", int startTimeMs = 0, int endTimeMs = 0,
-             string interval = "D", string category = "linear", CancellationToken cancel = default)
+             string interval = "D", string category = "linear", int limit = 10, CancellationToken cancel = default)
         {
             var response = await _httpClient
-                .GetFromJsonAsync<MarkPriceKlineInfo>($"/{_version}/market/mark-price-kline?category={category}&symbol={symbol}&interval={interval}&start={startTimeMs}&end={endTimeMs}", cancel)
+                .GetFromJsonAsync<MarkPriceKlineInfo>($"/{_version}/market/mark-price-kline?category={category}&symbol={symbol}&interval={interval}&start={startTimeMs}&end={endTimeMs}&limit={limit}", cancel)
                 .ConfigureAwait(false);
 
             return response;

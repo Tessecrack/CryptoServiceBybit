@@ -15,7 +15,7 @@
         <label>Symbol:</label>
         <select id="listSymbolsSelect" name="symbols"></select>
 
-        <label>Timeframe:</label>
+        <label style="margin: 10px">Timeframe:</label>
         <select id="listTimeframesSelect" name="timeframes">
             <option value="1">1</option>
             <option value="3">3</option>
@@ -42,12 +42,14 @@
     <p>
         <label>Info about </label>
         <label id="selectedSymbolLbl"></label>
+        <button id="updatePriceBtn">Update price</button>
     </p>
     <p>
         <table id="tablePrices">
             <caption><b>Prices</b></caption>
             <thead>
                 <tr>
+                    <td>Date</td>
                     <td>Open</td>
                     <td>High</td>
                     <td>Low</td>
@@ -59,9 +61,13 @@
         </table>
     </p>
     <script>
+        let currentSymbol;
+        let currentCategory;
+
         async function init() {
             await getTickers("spot", true);
-            selectSymbol();
+            changeCurrentSymbol();
+            changeCurrentCategory();
         }
 
         async function getTickers(categoryStr) {
@@ -74,6 +80,7 @@
                 const listTickers = responseJson.result.list;
 
                 const listSymbolsElement = document.getElementById("listSymbolsSelect");
+                removeOptions(listSymbolsElement);
                 for (let i = 0; i < listTickers.length; ++i) {
                     const optionElement = document.createElement("option");
                     const symbol = listTickers[i].symbol;
@@ -84,22 +91,57 @@
             }
         }
 
-        async function getOhlcBySelectedSymbol() {
-            
+        async function updatePriceByCurrentSymbol(symbol, category) {
+            const response = await fetch(`/api/market/kline/${category}/${symbol}`, {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                const responseJson = await response.json();
+                console.log(responseJson);
+            }
         }
 
-        function selectSymbol() {
+        function removeOptions(selectElement) {
+            const length = selectElement.options.length;
+            if (length == 0) {
+                return;
+            }
+            for (i = length - 1; i >= 0; i--) {
+                selectElement.remove(i);
+            }
+        }
+
+        function changeCurrentSymbol() {
             const symbolsListElement = document.getElementById("listSymbolsSelect");
             const selectedSymbolInList = symbolsListElement.options[symbolsListElement.selectedIndex];
             const selectedSymbolLbl = document.getElementById("selectedSymbolLbl");
             selectedSymbolLbl.value = selectedSymbolInList.value;
             selectedSymbolLbl.textContent = selectedSymbolInList.value;
+            currentSymbol = selectedSymbolInList.value;
         }
 
-
+        function changeCurrentCategory() {
+            const categoriesListElement = document.getElementById("listCategoriesSelect");
+            const selectedCategory = categoriesListElement.options[categoriesListElement.selectedIndex];
+            currentCategory = selectedCategory.value;
+        }
 
         const symbolsListElement = document.getElementById("listSymbolsSelect");
-        symbolsListElement.addEventListener("change", selectSymbol);
+        symbolsListElement.addEventListener("change", changeCurrentSymbol);
+
+        const categoriesListElement = document.getElementById("listCategoriesSelect");
+        categoriesListElement.addEventListener("change", async () => {
+            const selectedCategory = categoriesListElement.options[categoriesListElement.selectedIndex];
+            currentCategory = selectedCategory.value;
+            await getTickers(selectedCategory.value);
+            changeCurrentSymbol();
+        });
+
+        const updatePriceBtnElement = document.getElementById("updatePriceBtn");
+        updatePriceBtnElement.addEventListener("click", async () => {
+            await updatePriceByCurrentSymbol(currentSymbol, currentCategory);
+        });
 
         init();
     </script>
