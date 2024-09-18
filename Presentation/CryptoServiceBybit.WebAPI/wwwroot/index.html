@@ -45,6 +45,10 @@
         <button id="updatePriceBtn">Update price</button>
     </p>
     <p>
+        <label>Last price: </label>
+        <label id="lastPriceSymbolLbl"/>
+    </p>
+    <p>
         <table id="tablePrices">
             <caption><b>Prices</b></caption>
             <thead>
@@ -60,150 +64,6 @@
             </tbody>
         </table>
     </p>
-    <script>
-        let currentSymbol;
-        let currentCategory;
-        let currentTimeframe;
-
-        async function init() {
-            await getTickers("spot", true);
-            changeCurrentSymbol();
-            changeCurrentCategory();
-            changeCurrentTimeframe();
-        }
-
-        async function getTickers(categoryStr) {
-            const response = await fetch(`/api/tickers/${categoryStr}`, {
-                method: "GET",
-                headers: { "Accept": "application/json" }
-            });
-            if (response.ok === true) {
-                const responseJson = await response.json();
-                const listTickers = responseJson.result.list;
-
-                const listSymbolsElement = document.getElementById("listSymbolsSelect");
-                removeOptions(listSymbolsElement);
-                for (let i = 0; i < listTickers.length; ++i) {
-                    const optionElement = document.createElement("option");
-                    const symbol = listTickers[i].symbol;
-                    optionElement.value = symbol;
-                    optionElement.text = symbol;
-                    listSymbolsElement.append(optionElement);
-                }
-            }
-        }
-
-        async function updatePriceByCurrentSymbol(symbol, category, timeframe) {
-            const response = await fetch(`/api/market/kline/${category}/${symbol}?timeframe=${timeframe}`, {
-                method: "GET",
-                headers: { "Accept": "application/json" }
-            });
-            if (response.ok === true) {
-                const responseJson = await response.json();
-                console.log(responseJson);
-                const priceList = responseJson.result.list;
-
-                const tablePrices = document.getElementById("tablePricesBody");
-                tablePrices.innerHTML = "";
-                priceList.forEach(e => tablePrices.append(this.row(e)));
-            }
-        }
-
-        function removeOptions(selectElement) {
-            const length = selectElement.options.length;
-            if (length == 0) {
-                return;
-            }
-            for (i = length - 1; i >= 0; i--) {
-                selectElement.remove(i);
-            }
-        }
-
-        function changeCurrentSymbol() {
-            const symbolsListElement = document.getElementById("listSymbolsSelect");
-            const selectedSymbolInList = symbolsListElement.options[symbolsListElement.selectedIndex];
-            const selectedSymbolLbl = document.getElementById("selectedSymbolLbl");
-            selectedSymbolLbl.value = selectedSymbolInList.value;
-            selectedSymbolLbl.textContent = selectedSymbolInList.value;
-            currentSymbol = selectedSymbolInList.value;
-        }
-
-        function changeCurrentCategory() {
-            const categoriesListElement = document.getElementById("listCategoriesSelect");
-            const selectedCategory = categoriesListElement.options[categoriesListElement.selectedIndex];
-            currentCategory = selectedCategory.value;
-        }
-
-        function changeCurrentTimeframe() {
-            const timeframesListElement = document.getElementById("listTimeframesSelect");
-            const selectedTimeframe = timeframesListElement.options[timeframesListElement.selectedIndex];
-            currentTimeframe = selectedTimeframe.value;
-        }
-
-        function row(priceInfo) {
-            const date = priceInfo[0];
-            const open = priceInfo[1];
-            const high = priceInfo[2];
-            const low = priceInfo[3];
-            const close = priceInfo[4];
-
-            const trElement = document.createElement("tr");
-
-            const humanReadableDate = new Date(Number(date));
-
-            const dateTd = document.createElement("td");
-            dateTd.append(humanReadableDate.toLocaleString());
-            trElement.append(dateTd);
-
-            const openTd = document.createElement("td");
-            openTd.append(open);
-            trElement.append(openTd);
-
-            const highTd = document.createElement("td");
-            highTd.append(high);
-            trElement.append(highTd);
-
-            const lowTd = document.createElement("td");
-            lowTd.append(low);
-            trElement.append(lowTd);
-
-            const closeTd = document.createElement("td");
-            closeTd.append(close);
-            trElement.append(closeTd);
-
-            return trElement;
-        }
-
-        const symbolsListElement = document.getElementById("listSymbolsSelect");
-        symbolsListElement.addEventListener("change", async () => {
-            changeCurrentSymbol();
-
-            await updatePriceByCurrentSymbol(currentSymbol, currentCategory, currentTimeframe);
-        });
-
-        const categoriesListElement = document.getElementById("listCategoriesSelect");
-        categoriesListElement.addEventListener("change", async () => {
-            const selectedCategory = categoriesListElement.options[categoriesListElement.selectedIndex];
-            currentCategory = selectedCategory.value;
-            await getTickers(selectedCategory.value);
-            changeCurrentSymbol();
-
-            await updatePriceByCurrentSymbol(currentSymbol, currentCategory, currentTimeframe);
-        });
-
-        const timeframesListElemnt = document.getElementById("listTimeframesSelect")
-        timeframesListElemnt.addEventListener("change", async () => {
-            changeCurrentTimeframe();
-
-            await updatePriceByCurrentSymbol(currentSymbol, currentCategory, currentTimeframe);
-        });
-
-        const updatePriceBtnElement = document.getElementById("updatePriceBtn");
-        updatePriceBtnElement.addEventListener("click", async () => {
-            await updatePriceByCurrentSymbol(currentSymbol, currentCategory, currentTimeframe);
-        });
-
-        init();
-    </script>
+    <script src="script.js" type="text/javascript"></script>
 </body>
 </html>

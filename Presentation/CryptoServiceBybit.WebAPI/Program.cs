@@ -1,5 +1,6 @@
 using CryptoServiceBybit.ServiceBybit;
 using CryptoServiceBybit.WebAPI.Middleware.TokenAccess;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddServiceBybitTestnet();
@@ -35,9 +36,17 @@ app.MapGet("/api/tickers/inverse/{symbol}", async (BaseClient bybitService, stri
     return Results.Json(tickerInverse);
 });
 
-app.MapGet("/api/market/kline/spot/{symbol}", async (BaseClient bybitService, string symbol, string timeframe) =>
+app.MapGet("/api/market/kline/spot/{symbol}", async (BaseClient bybitService, string symbol, string timeframe, int? limit) =>
 {
-    var priceInfoSpot = await bybitService.GetPriceKline(symbol, 0, 0, timeframe);
+    int lim = limit == null ? 10 : limit.Value;
+    var priceInfoSpot = await bybitService.GetPriceKline(symbol, 0, 0, timeframe, "spot", lim);
+    return Results.Json(priceInfoSpot);
+});
+
+app.MapGet("/api/market/kline/inverse/{symbol}", async (BaseClient bybitService, string symbol, string timeframe, int? limit) =>
+{
+    int lim = limit == null ? 10 : limit.Value;
+    var priceInfoSpot = await bybitService.GetPriceKline(symbol, 0, 0, timeframe, "inverse", lim);
     return Results.Json(priceInfoSpot);
 });
 
