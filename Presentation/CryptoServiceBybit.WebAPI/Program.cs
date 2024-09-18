@@ -35,9 +35,9 @@ app.MapGet("/api/tickers/inverse/{symbol}", async (BaseClient bybitService, stri
     return Results.Json(tickerInverse);
 });
 
-app.MapGet("/api/market/kline/spot/{symbol}", async (BaseClient bybitService, string symbol) =>
+app.MapGet("/api/market/kline/spot/{symbol}", async (BaseClient bybitService, string symbol, string timeframe) =>
 {
-    var priceInfoSpot = await bybitService.GetPriceKline(symbol);
+    var priceInfoSpot = await bybitService.GetPriceKline(symbol, 0, 0, timeframe);
     return Results.Json(priceInfoSpot);
 });
 
