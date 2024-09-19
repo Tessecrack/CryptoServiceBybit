@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace CryptoServiceBybit.Domain.Models
+namespace CryptoServiceBybit.Domain.Models.Tickers
 {
     public class TickersSpotInfo : BaseResponse
     {

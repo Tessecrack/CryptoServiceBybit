@@ -1,69 +1,54 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <title>CryptoService Bybit</title>
-    <style>
-        td {
-            padding: 15px;
-        }
-    </style>
+    <title>CryptoService</title>
+    <link rel="stylesheet" href="styles.css" type="text/css" />
 </head>
 <body>
-    <h2>CryptoService Bybit</h2>
-    <p>
-        <label>Symbol:</label>
-        <select id="listSymbolsSelect" name="symbols"></select>
-
-        <label style="margin: 10px">Timeframe:</label>
-        <select id="listTimeframesSelect" name="timeframes">
-            <option value="1">1</option>
-            <option value="3">3</option>
-            <option value="5">5</option>
-            <option value="15">15</option>
-            <option value="30">30</option>
-            <option value="60">60</option>
-            <option value="120">120</option>
-            <option value="240">240</option>
-            <option value="360">360</option>
-            <option value="720">720</option>
-            <option value="D">D</option>
-            <option value="W">W</option>
-            <option value="M">M</option>
-        </select>
-    </p>
-    <p>
-        <label>Category</label>
-        <select id="listCategoriesSelect" name="category">
-            <option value="spot">Spot</option>
-            <option value="inverse">Inverse</option>
-        </select>
-    </p>
-    <p>
-        <label>Info about </label>
-        <label id="selectedSymbolLbl"></label>
-        <button id="updatePriceBtn">Update price</button>
-    </p>
-    <p>
-        <label>Last price: </label>
-        <label id="lastPriceSymbolLbl"/>
-    </p>
-    <p>
-        <table id="tablePrices">
-            <caption><b>Prices</b></caption>
-            <thead>
-                <tr>
-                    <td>Date</td>
-                    <td>Open</td>
-                    <td>High</td>
-                    <td>Low</td>
-                    <td>Close</td>
-                </tr>
-            </thead>
-            <tbody id="tablePricesBody">
-            </tbody>
-        </table>
-    </p>
-    <script src="script.js" type="text/javascript"></script>
+    <div id="wrapper">
+        <header>
+            <img src="images/droid.png" width="60" height="60">
+            <h1 class="text">CryptoService</h1>
+            <form name="search" action="#" method="get">
+                <input type="text" name="q" placeholder="Search" /><button type="submit">GO</button>
+            </form>
+        </header>
+        <div id="heading">
+            <p>
+                <label class="text">Timeframe</label>
+                <select id="timeframesSelect">
+                    <option value="1">1</option>
+                    <option value="3">3</option>
+                    <option value="5">5</option>
+                    <option value="15">15</option>
+                    <option value="30">30</option>
+                    <option value="60">60</option>
+                    <option value="120">120</option>
+                    <option value="240">240</option>
+                    <option value="360">360</option>
+                    <option value="720">720</option>
+                    <option value="D">D</option>
+                    <option value="W">W</option>
+                    <option value="M">M</option>
+                </select>
+                <label class="text">Category</label>
+                <select id="categoriesSelect">
+                    <option value="spot">Spot</option>
+                    <option value="inverse">Inverse</option>
+                    <option value="linear">Linear</option>
+                    <option value="option">Option</option>
+                </select>
+                <label class="text">Symbol</label>
+                <select id="symbolsSelect">
+                </select>
+            </p>
+        </div>
+        <aside>
+        </aside>
+        <section></section>
+    </div>
+    <footer>
+    </footer>
+    <script src="script.js"></script>
 </body>
 </html>

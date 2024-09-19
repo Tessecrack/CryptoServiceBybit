@@ -1,6 +1,4 @@
 using CryptoServiceBybit.ServiceBybit;
-using CryptoServiceBybit.WebAPI.Middleware.TokenAccess;
-using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddServiceBybitTestnet();
@@ -24,6 +22,18 @@ app.MapGet("/api/tickers/inverse", async (BaseClient bybitService) =>
     return Results.Json(tickersInverse);
 });
 
+app.MapGet("/api/tickers/linear", async (BaseClient bybitService) =>
+{
+    var tickersLinear = await bybitService.GetTickersLinear();
+    return Results.Json(tickersLinear);
+});
+
+app.MapGet("/api/tickers/option", async (BaseClient bybitService) =>
+{
+    var tickersOption = await bybitService.GetTickersOption();
+    return Results.Json(tickersOption);
+});
+
 app.MapGet("/api/tickers/spot/{symbol}", async (BaseClient bybitService, string symbol) =>
 {
     var tickerSpot = await bybitService.GetTickerSpot(symbol);
@@ -34,6 +44,18 @@ app.MapGet("/api/tickers/inverse/{symbol}", async (BaseClient bybitService, stri
 {
     var tickerInverse = await bybitService.GetTickerInverse(symbol);
     return Results.Json(tickerInverse);
+});
+
+app.MapGet("/api/tickers/linear/{symbol}", async (BaseClient bybitService, string symbol) =>
+{
+    var tickerLinear = await bybitService.GetTickerLinear(symbol);
+    return Results.Json(tickerLinear);
+});
+
+app.MapGet("/api/tickers/option/{symbol}", async (BaseClient bybitService, string symbol) =>
+{
+    var tickerOption = await bybitService.GetTickerOption(symbol);
+    return Results.Json(tickerOption);
 });
 
 app.MapGet("/api/market/kline/spot/{symbol}", async (BaseClient bybitService, string symbol, string timeframe, int? limit) =>

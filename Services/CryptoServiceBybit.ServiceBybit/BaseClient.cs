@@ -1,4 +1,5 @@
 ﻿using CryptoServiceBybit.Domain.Models;
+using CryptoServiceBybit.Domain.Models.Tickers;
 using System.Net.Http.Json;
 
 namespace CryptoServiceBybit.ServiceBybit
@@ -51,7 +52,7 @@ namespace CryptoServiceBybit.ServiceBybit
             return response;
         }
 
-        public async Task<TickersSpotInfo> GetTickerSpot(string symbol = "BTCUSDT", CancellationToken cancel = default)
+        public async Task<TickersSpotInfo> GetTickerSpot(string symbol, CancellationToken cancel = default)
         {
             var response = await _httpClient
                 .GetFromJsonAsync<TickersSpotInfo>($"/{_version}/market/tickers?category=spot&symbol={symbol}", cancel)
@@ -69,7 +70,7 @@ namespace CryptoServiceBybit.ServiceBybit
             return response;
         }
 
-        public async Task<TickersInverseInfo> GetTickerInverse(string symbol = "BTCUSDT", CancellationToken cancel = default)
+        public async Task<TickersInverseInfo> GetTickerInverse(string symbol, CancellationToken cancel = default)
         {
             var response = await _httpClient
                 .GetFromJsonAsync<TickersInverseInfo>($"/{_version}/market/tickers?category=inverse&symbol={symbol}", cancel)
@@ -83,6 +84,42 @@ namespace CryptoServiceBybit.ServiceBybit
             var response = await _httpClient
                 .GetFromJsonAsync<TickersInverseInfo>($"/{_version}/market/tickers?category=inverse", cancel)
                 .ConfigureAwait(false);
+            return response;
+        }
+
+        public async Task<TickersLinearInfo> GetTickerLinear(string symbol, CancellationToken cancel = default)
+        {
+            var response = await _httpClient
+                .GetFromJsonAsync<TickersLinearInfo>($"/{_version}/market/tickers?category=linear&symbol={symbol}", cancel)
+                .ConfigureAwait(false);
+
+            return response;
+        }
+
+        public async Task<TickersLinearInfo> GetTickersLinear(CancellationToken cancel = default)
+        {
+            var response = await _httpClient
+                .GetFromJsonAsync<TickersLinearInfo>($"/{_version}/market/tickers?category=linear", cancel)
+                .ConfigureAwait(false);
+
+            return response;
+        }
+
+        public async Task<TickersOptionInfo> GetTickerOption(string symbol, CancellationToken cancel = default)
+        {
+            var response = await _httpClient
+                .GetFromJsonAsync<TickersOptionInfo>($"/{_version}/market/tickers?category=option&symbol={symbol}", cancel)
+                .ConfigureAwait(false);
+
+            return response;
+        }
+
+        public async Task<TickersOptionInfo> GetTickersOption(CancellationToken cancel = default)
+        {
+            var response = await _httpClient
+                .GetFromJsonAsync<TickersOptionInfo>($"/{_version}/market/tickers?category=option", cancel)
+                .ConfigureAwait(false);
+
             return response;
         }
     }
