@@ -20,6 +20,25 @@ button {
     font-family: 'Oswald', sans-serif;
 }
 
+h1 {
+    display: inline-block;
+    color: #fff;
+    font: 40px/40px 'Oswald', sans-serif;
+    margin: 0;
+    padding: 0 10px;
+}
+
+select {
+    background-color: #3c394b;
+    color: #fff;
+    margin: 10px;
+    border-radius: 15px;
+}
+
+label {
+    margin: 10px;
+}
+
 .text {
     color: #fff;
 }
@@ -66,15 +85,16 @@ button {
 
 #main-panel {
     display: flex;
-    flex-basis: 100%;
     margin-top:1%;
+    flex-basis:100%;
 }
 
 #graphic-panel {
     background-color: #3c394b;
     border-radius: 20px;
     float: left;
-    flex-basis:40%;
+    flex:none;
+    width: 30em;
     padding: 1%;
     margin-right:1%;
 }
@@ -82,42 +102,37 @@ button {
 #quotes-panel {
     background-color: #3c394b;
     border-radius: 20px;
-    flex-basis:60%;
+    flex:1;
     padding: 1%;
+}
+
+#quotes-panel-table {
+
+}
+
+#quotes-table {
+    width:100%;
+    padding: 1%;
+}
+
+#quotes-table tr {
+    margin: 10%;
+}
+
+#quotes-table td {
+    color: #fff;
+    border-bottom: 1px solid #230933;
 }
 
 #actions-panel {
     display: flex;
     flex-basis: 100%;
-    margin-top: 1%;
-    background-color: #3c394b;
-    border-radius: 20px;
-    padding: 1%;
 }
 
 #user-actions-panel {
-
-}
-
-h1 {
-    display: inline-block;
-    color: #fff;
-    font: 40px/40px 'Oswald', sans-serif;
-    margin: 0;
-    padding: 0 10px;
-}
-
-select {
+    margin-top: 1%;
     background-color: #3c394b;
-    color: #fff;
-    margin: 10px;
-    border-radius: 15px;
-}
-
-label {
-    margin: 10px;
-}
-
-header {
-    padding: 20px 0;
+    border-radius: 20px;
+    flex:auto;
+    padding:1%;
 }
