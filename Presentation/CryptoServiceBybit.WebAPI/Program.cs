@@ -68,8 +68,8 @@ app.MapGet("/api/market/kline/spot/{symbol}", async (BaseClient bybitService, st
 app.MapGet("/api/market/kline/inverse/{symbol}", async (BaseClient bybitService, string symbol, string timeframe, int? limit) =>
 {
     int lim = limit == null ? 10 : limit.Value;
-    var priceInfoSpot = await bybitService.GetPriceKline(symbol, 0, 0, timeframe, "inverse", lim);
-    return Results.Json(priceInfoSpot);
+    var priceInfoInverse = await bybitService.GetPriceKline(symbol, 0, 0, timeframe, "inverse", lim);
+    return Results.Json(priceInfoInverse);
 });
 
 app.Run();

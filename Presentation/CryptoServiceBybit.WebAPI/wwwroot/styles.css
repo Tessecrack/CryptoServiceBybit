@@ -3,13 +3,13 @@
     background-color: #2a2735;
 }
 
-input[type="text"] {
+#search-input {
     background-color: #2a2735;
     border: 1px solid #e7e7e7;
     height: 30px;
     color: #fff;
     padding: 0 10px;
-    vertical-align: top;
+    flex:1;
 }
 
 button {
@@ -24,18 +24,79 @@ button {
     color: #fff;
 }
 
-form[name="search"] {
-    float: right;
-}
-
 #wrapper {
     max-width: 960px;
-    margin: auto
+    margin: auto;
+    display: flex;
+    flex-direction: column;
 }
 
-#heading {
+#header {
+    flex-direction:column;
+    flex-wrap: wrap;
+}
+
+#head-panel {
+    border-radius: 20px;
+    display:flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+#header-logo-panel {
+    flex-direction: row;
+    flex-wrap:nowrap;
+}
+
+#header-search-panel {
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+#header-functional-panel {
+    background-color: #3c394b;
+    display: flex;
+    flex-direction:row;
+    flex-wrap:nowrap;
+    border-radius:20px;
+    margin-top: 1%;
+    padding-left: 1%;
+}
+
+#main-panel {
+    display: flex;
+    flex-basis: 100%;
+    margin-top:1%;
+}
+
+#graphic-panel {
     background-color: #3c394b;
     border-radius: 20px;
+    float: left;
+    flex-basis:40%;
+    padding: 1%;
+    margin-right:1%;
+}
+
+#quotes-panel {
+    background-color: #3c394b;
+    border-radius: 20px;
+    flex-basis:60%;
+    padding: 1%;
+}
+
+#actions-panel {
+    display: flex;
+    flex-basis: 100%;
+    margin-top: 1%;
+    background-color: #3c394b;
+    border-radius: 20px;
+    padding: 1%;
+}
+
+#user-actions-panel {
+
 }
 
 h1 {
@@ -44,12 +105,6 @@ h1 {
     font: 40px/40px 'Oswald', sans-serif;
     margin: 0;
     padding: 0 10px;
-}
-
-aside {
-    float: left;
-    width: 250px;
-    background-color: #3c394b;
 }
 
 select {

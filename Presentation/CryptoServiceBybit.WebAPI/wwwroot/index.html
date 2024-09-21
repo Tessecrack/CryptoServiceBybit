@@ -6,15 +6,20 @@
 </head>
 <body>
     <div id="wrapper">
-        <header>
-            <img src="images/droid.png" width="60" height="60">
-            <h1 class="text">CryptoService</h1>
-            <form name="search" action="#" method="get">
-                <input type="text" name="q" placeholder="Search" /><button type="submit">GO</button>
-            </form>
-        </header>
-        <div id="heading">
-            <p>
+        <div id="header">
+            <div id="head-panel">
+                <div id="header-logo-panel">
+                    <img src="images/droid.png" width="60" height="60">
+                    <h1 class="text">CryptoService</h1>
+                </div>
+                <div id="header-search-panel">
+                    <form name="search" action="#" method="get">
+                        <input id="search-input" type="text" name="q" placeholder="Search" />
+                        <button type="submit">GO</button>
+                    </form>
+                </div>
+            </div>
+            <div id="header-functional-panel">
                 <label class="text">Timeframe</label>
                 <select id="timeframesSelect">
                     <option value="1">1</option>
@@ -41,7 +46,20 @@
                 <label class="text">Symbol</label>
                 <select id="symbolsSelect">
                 </select>
-            </p>
+            </div>
+        </div>
+        <div id="main-panel">
+            <div id="graphic-panel">
+                <label class="text">Graphic</label>
+            </div>
+            <div id="quotes-panel">
+                <label class="text">Quotes</label>
+            </div>
+        </div>
+        <div id="actions-panel">
+            <div id="user-actions-panel">
+                <label class="text">Actions</label>
+            </div>
         </div>
         <aside>
         </aside>
