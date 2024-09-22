@@ -13,24 +13,28 @@ app.UseStaticFiles();
 app.MapGet("/api/tickers/spot", async (BaseClient bybitService) =>
 {
     var tickersSpot = await bybitService.GetTickersSpot();
+    Console.WriteLine($"[{DateTime.Now}]Request: [/api/tickers/spot]");
     return Results.Json(tickersSpot);
 });
 
 app.MapGet("/api/tickers/inverse", async (BaseClient bybitService) =>
 {
     var tickersInverse = await bybitService.GetTickersInverse();
+    Console.WriteLine($"[{DateTime.Now}]Request: [/api/tickers/inverse]");
     return Results.Json(tickersInverse);
 });
 
 app.MapGet("/api/tickers/linear", async (BaseClient bybitService) =>
 {
     var tickersLinear = await bybitService.GetTickersLinear();
+    Console.WriteLine($"[{DateTime.Now}]Request: [/api/tickers/linear]");
     return Results.Json(tickersLinear);
 });
 
 app.MapGet("/api/tickers/option", async (BaseClient bybitService) =>
 {
     var tickersOption = await bybitService.GetTickersOption();
+    Console.WriteLine($"[{DateTime.Now}]Request: [/api/tickers/option]");
     return Results.Json(tickersOption);
 });
 

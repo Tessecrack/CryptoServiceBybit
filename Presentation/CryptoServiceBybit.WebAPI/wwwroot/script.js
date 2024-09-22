@@ -2,6 +2,9 @@ let currentSymbol;
 let currentTimeframe;
 let currentCategory;
 
+
+let cachedSymbols = {};
+
 const timeframesSelectElement = document.getElementById("timeframesSelect");
 const categoriesSelectElement = document.getElementById("categoriesSelect");
 const symbolsSelectElement = document.getElementById("symbolsSelect");
@@ -30,17 +33,22 @@ async function init() {
 }
 
 async function getSymbols(category = "spot") {
-    const response = await fetch(`/api/tickers/${category}`, {
-        method: "GET",
-        headers: { "Accept": "application/json" }
-    });
-
-    if (response.ok === true) {
-        const responseJson = await response.json();
-        console.log(responseJson);
-        const list = responseJson.result.list;
+    if (cachedSymbols[category]) {
+        const list = cachedSymbols[category];
         symbolsSelectElement.innerHTML = "";
         list.forEach(e => addOptionToSelectElement(symbolsSelectElement, e.symbol));
+    } else {
+        const response = await fetch(`/api/tickers/${category}`, {
+            method: "GET",
+            headers: { "Accept": "application/json" }
+        });
+        if (response.ok === true) {
+            const responseJson = await response.json();
+            const list = responseJson.result.list;
+            cachedSymbols[category] = list;
+            symbolsSelectElement.innerHTML = "";
+            list.forEach(e => addOptionToSelectElement(symbolsSelectElement, e.symbol));
+        }
     }
 }
 
