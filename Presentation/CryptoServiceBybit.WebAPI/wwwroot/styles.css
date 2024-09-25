@@ -45,6 +45,7 @@ label {
 
 #wrapper {
     max-width: 960px;
+    max-height: 480px;
     margin: auto;
     display: flex;
     flex-direction: column;
@@ -102,12 +103,14 @@ label {
 #quotes-panel {
     background-color: #3c394b;
     border-radius: 20px;
-    flex:1;
+    flex: 1;
     padding: 1%;
+    display: flex;
+    flex-direction: column;
 }
 
 #quotes-panel-table {
-
+    display:flex;
 }
 
 #quotes-table {
@@ -117,11 +120,19 @@ label {
 
 #quotes-table tr {
     margin: 10%;
+    width: 100%;
 }
 
 #quotes-table td {
     color: #fff;
     border-bottom: 1px solid #230933;
+    width: 100%;
+}
+
+#quotes-table-body {
+    width: 100%;
+    display: block;
+    overflow-y: auto;
 }
 
 #actions-panel {
