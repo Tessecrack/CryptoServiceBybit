@@ -113,28 +113,6 @@ label {
     display:flex;
 }
 
-#quotes-table {
-    width:100%;
-    padding: 1%;
-}
-
-#quotes-table tr {
-    margin: 10%;
-    width: 100%;
-}
-
-#quotes-table td {
-    color: #fff;
-    border-bottom: 1px solid #230933;
-    width: 100%;
-}
-
-#quotes-table-body {
-    width: 100%;
-    display: block;
-    overflow-y: auto;
-}
-
 #actions-panel {
     display: flex;
     flex-basis: 100%;
@@ -146,4 +124,32 @@ label {
     border-radius: 20px;
     flex:auto;
     padding:1%;
+}
+
+#quotes-table {
+    display: flex;
+    flex-direction:column;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#quotes-table-row {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+#quotes-table-cell-symbol {
+    color: #fff;
+    padding: 2%;
+    flex: 1;
+    border-bottom-style: solid;
+    border-bottom-color: #4d395c;
+}
+
+#quotes-table-cell-price {
+    color: #fff;
+    padding: 2%;
+    flex: 1;
+    border-bottom-style: solid;
+    border-bottom-color: #4d395c;
 }

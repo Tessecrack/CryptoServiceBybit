@@ -7,12 +7,13 @@ let cachedSymbols = {};
 const timeframesSelectElement = document.getElementById("timeframesSelect");
 const categoriesSelectElement = document.getElementById("categoriesSelect");
 const symbolsSelectElement = document.getElementById("symbolsSelect");
-const tableBodyElement = document.getElementById("quotes-table-body");
+const quotesTableElement = document.getElementById("quotes-table");
 
 categoriesSelectElement.addEventListener("change", async () => {
     const selectedCategory = categoriesSelectElement.options[categoriesSelectElement.selectedIndex];
     currentCategory = selectedCategory.value;
     await getSymbols(currentCategory);
+    updateQuotesTable();
 });
 
 timeframesSelectElement.addEventListener("change", () => {
@@ -33,6 +34,16 @@ async function getSymbols(category) {
         if (response.ok === true) {
             const responseJson = await response.json();
             const list = responseJson.result.list;
+            list.sort(function (firstItem, secondItem) {
+                const firstNumber = Number(firstItem.lastPrice);
+                const secondNumber = Number(secondItem.lastPrice);
+                if (firstNumber > secondNumber) {
+                    return -1;
+                } else if (firstNumber < secondNumber) {
+                    return 1;
+                }
+                return 0;
+            });
             cachedSymbols[category] = list;
             symbolsSelectElement.innerHTML = "";
             list.forEach(e => addOptionToSelectElement(symbolsSelectElement, e.symbol));
@@ -49,22 +60,29 @@ function addOptionToSelectElement(selectElement, option) {
 
 function updateQuotesTable() {
     const symbolsInfos = cachedSymbols[currentCategory];
+    if (quotesTableElement) {
+        quotesTableElement.innerHTML = "";
+    }
     if (symbolsInfos.length > 0) {
-        tableBodyElement.innerHTML = "";
         for (let i = 0; i < symbolsInfos.length; ++i) {
-            const trElement = document.createElement("tr");
-            const symbolNameTdElement = document.createElement("td");
-            const lastPriceTdElement = document.createElement("td");
+            const row = document.createElement("div");
+            row.id = "quotes-table-row";
 
             const symbolInfo = symbolsInfos[i];
 
-            symbolNameTdElement.append(symbolInfo.symbol);
-            lastPriceTdElement.append(symbolInfo.lastPrice);
+            const symbolCell = document.createElement("div");
+            symbolCell.id = "quotes-table-cell-symbol";
+            symbolCell.className = "text";
+            symbolCell.append(symbolInfo.symbol);
 
-            trElement.appendChild(symbolNameTdElement);
-            trElement.appendChild(lastPriceTdElement);
+            const priceCell = document.createElement("div");
+            priceCell.id = "quotes-table-cell-price";
+            priceCell.className = "text";
+            priceCell.append(symbolInfo.lastPrice);
 
-            tableBodyElement.appendChild(trElement);
+            row.appendChild(symbolCell);
+            row.appendChild(priceCell);
+            quotesTableElement.appendChild(row);
         }
     }
 }
