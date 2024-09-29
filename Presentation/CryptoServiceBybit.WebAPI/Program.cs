@@ -1,7 +1,7 @@
 using CryptoServiceBybit.ServiceBybit;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddServiceBybit();
+builder.Services.AddServiceBybitTestnet();
 var app = builder.Build();
 
 var tokenAccess = builder.Configuration["Token"];

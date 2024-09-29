@@ -1,8 +1,12 @@
+import { Worker } from "./workers/worker.js";
+
+const categories = ["spot", "inverse", "linear"];
+
 let currentSymbol;
 let currentTimeframe;
 let currentCategory;
 
-let cachedSymbols = {};
+let cachedSymbols = new Map(); // key is categories; values is symbols Map
 
 const timeframesSelectElement = document.getElementById("timeframesSelect");
 const categoriesSelectElement = document.getElementById("categoriesSelect");
@@ -21,11 +25,18 @@ timeframesSelectElement.addEventListener("change", () => {
     currentTimeframe = selectedTimeframe.value;
 });
 
+function callbackSymbolUpdatePrice(msg) {
+    console.log(msg);
+}
+
 async function getSymbols(category) {
-    if (cachedSymbols[category]) {
-        const list = cachedSymbols[category];
+    const symbolsByCategory = cachedSymbols.get(category);
+    if (symbolsByCategory) {
+        const mapSymbols = symbolsByCategory;
         symbolsSelectElement.innerHTML = "";
-        list.forEach(e => addOptionToSelectElement(symbolsSelectElement, e.symbol));
+        for (const [key, value] of mapSymbols) {
+            addOptionToSelectElement(symbolsSelectElement, value.symbol);
+        }
     } else {
         const response = await fetch(`/api/tickers/${category}`, {
             method: "GET",
@@ -44,12 +55,38 @@ async function getSymbols(category) {
                 }
                 return 0;
             });
-            cachedSymbols[category] = list;
+            const mapSymbols = new Map();
+            list.forEach((e) => {
+                if (e.symbol) {
+                    const symInfo = {
+                        lastPrice: e.lastPrice,
+                        symbol: e.symbol
+                    };
+                    mapSymbols.set(e.symbol, symInfo);
+                }
+            });
+            cachedSymbols.set(category, mapSymbols);
             symbolsSelectElement.innerHTML = "";
-            list.forEach(e => addOptionToSelectElement(symbolsSelectElement, e.symbol));
+            for (const [key, value] of mapSymbols) {
+                addOptionToSelectElement(symbolsSelectElement, value.symbol);
+            }
         }
     }
 }
+
+async function getLastPrice(category, symbol) {
+    const response = await fetch(`/api/market/kline/${category}/${symbol}?timeframe=1&limit=1`, {
+        method: "GET",
+        headers: { "Accept": "application/json" }
+    });
+
+    if (response.ok === true) {
+        const responseJson = await response.json();
+        console.log(responseJson);
+    }
+}
+
+const symbolRequestWorker = new Worker(callbackSymbolUpdatePrice);
 
 function addOptionToSelectElement(selectElement, option) {
     const optionElement = document.createElement("option");
@@ -59,31 +96,28 @@ function addOptionToSelectElement(selectElement, option) {
 }
 
 function updateQuotesTable() {
-    const symbolsInfos = cachedSymbols[currentCategory];
-    if (quotesTableElement) {
-        quotesTableElement.innerHTML = "";
-    }
-    if (symbolsInfos.length > 0) {
-        for (let i = 0; i < symbolsInfos.length; ++i) {
-            const row = document.createElement("div");
-            row.id = "quotes-table-row";
+    const symbolsInfos = cachedSymbols.get(currentCategory);
+    quotesTableElement.innerHTML = "";
 
-            const symbolInfo = symbolsInfos[i];
+    for (const [key, value] of symbolsInfos) {
+        const row = document.createElement("div");
+        row.id = "quotes-table-row";
 
-            const symbolCell = document.createElement("div");
-            symbolCell.id = "quotes-table-cell-symbol";
-            symbolCell.className = "text";
-            symbolCell.append(symbolInfo.symbol);
+        const symbolInfo = value;
 
-            const priceCell = document.createElement("div");
-            priceCell.id = "quotes-table-cell-price";
-            priceCell.className = "text";
-            priceCell.append(symbolInfo.lastPrice);
+        const symbolCell = document.createElement("div");
+        symbolCell.className = "quotes-table-cell-symbol";
+        symbolCell.id = symbolInfo.symbol;
+        symbolCell.append(symbolInfo.symbol);
 
-            row.appendChild(symbolCell);
-            row.appendChild(priceCell);
-            quotesTableElement.appendChild(row);
-        }
+        const priceCell = document.createElement("div");
+        priceCell.className = "quotes-table-cell-price";
+        priceCell.id = symbolInfo.lastPrice;
+        priceCell.append(symbolInfo.lastPrice);
+
+        row.appendChild(symbolCell);
+        row.appendChild(priceCell);
+        quotesTableElement.appendChild(row);
     }
 }
 
@@ -91,6 +125,7 @@ async function init() {
     currentCategory = "spot";
     await getSymbols(currentCategory);
     updateQuotesTable()
+    symbolRequestWorker.runWorker();
 }
 
 init();

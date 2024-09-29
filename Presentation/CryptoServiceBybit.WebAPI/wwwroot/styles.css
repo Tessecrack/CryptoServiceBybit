@@ -43,6 +43,23 @@ label {
     color: #fff;
 }
 
+.quotes-table-cell-symbol {
+    color: #fff;
+    padding: 2%;
+    flex: 1;
+    border-bottom-style: solid;
+    border-bottom-color: #4d395c;
+}
+
+.quotes-table-cell-price {
+    color: #fff;
+    padding: 2%;
+    flex: 1;
+    border-bottom-style: solid;
+    border-bottom-color: #4d395c;
+}
+
+
 #wrapper {
     max-width: 960px;
     max-height: 480px;
@@ -136,20 +153,4 @@ label {
 #quotes-table-row {
     display: flex;
     flex-wrap: nowrap;
-}
-
-#quotes-table-cell-symbol {
-    color: #fff;
-    padding: 2%;
-    flex: 1;
-    border-bottom-style: solid;
-    border-bottom-color: #4d395c;
-}
-
-#quotes-table-cell-price {
-    color: #fff;
-    padding: 2%;
-    flex: 1;
-    border-bottom-style: solid;
-    border-bottom-color: #4d395c;
 }
