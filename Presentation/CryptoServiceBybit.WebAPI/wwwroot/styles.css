@@ -51,14 +51,29 @@ label {
     border-bottom-color: #4d395c;
 }
 
-.quotes-table-cell-price {
-    color: #fff;
+.quotes-table-cell-price-white-text {
+    color: #ffffff;
     padding: 2%;
     flex: 1;
     border-bottom-style: solid;
     border-bottom-color: #4d395c;
 }
 
+.quotes-table-cell-price-red-text {
+    color: #ff0000;
+    padding: 2%;
+    flex: 1;
+    border-bottom-style: solid;
+    border-bottom-color: #4d395c;
+}
+
+.quotes-table-cell-price-green-text {
+    color: #00ff02;
+    padding: 2%;
+    flex: 1;
+    border-bottom-style: solid;
+    border-bottom-color: #4d395c;
+}
 
 #wrapper {
     max-width: 960px;

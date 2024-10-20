@@ -6,6 +6,7 @@ let currentSymbol;
 let currentTimeframe;
 let currentCategory;
 
+let previousCachedSymbols = undefined; // cache for cachedSymbols
 let cachedSymbols = new Map(); // key is categories; values is symbols Map
 
 const timeframesSelectElement = document.getElementById("timeframesSelect");
@@ -53,8 +54,8 @@ async function getSymbolsInfo() {
         const responseJson = await response.json();
         const list = responseJson.result.list;
         list.sort(function (firstItem, secondItem) {
-            const firstNumber = Number(firstItem.lastPrice);
-            const secondNumber = Number(secondItem.lastPrice);
+            const firstNumber = Number(firstItem.turnover24h);
+            const secondNumber = Number(secondItem.turnover24h);
             if (firstNumber > secondNumber) {
                 return -1;
             } else if (firstNumber < secondNumber) {
@@ -72,6 +73,7 @@ async function getSymbolsInfo() {
                 mapSymbols.set(e.symbol, symInfo);
             }
         });
+        previousCachedSymbols = new Map(cachedSymbols);
         cachedSymbols.set(currentCategory, mapSymbols);
     }
 }
@@ -107,6 +109,10 @@ function updateSymbolsSelectElement() {
 }
 
 function updateQuotesTable() {
+    let previousSymbolsByCategory;
+    if (previousCachedSymbols) {
+        previousSymbolsByCategory = previousCachedSymbols.get(currentCategory);
+    }
     const symbolsByCategory = cachedSymbols.get(currentCategory);
     quotesTableElement.innerHTML = "";
 
@@ -122,7 +128,19 @@ function updateQuotesTable() {
         symbolCell.append(symbolInfo.symbol);
 
         const priceCell = document.createElement("div");
-        priceCell.className = "quotes-table-cell-price";
+        priceCell.className = "quotes-table-cell-price-white-text";
+        if (previousSymbolsByCategory) {
+            const previousPriceStr = previousSymbolsByCategory.get(key).lastPrice;
+            const currentPriceStr = symbolInfo.lastPrice;
+
+            const previousPrice = Number(previousPriceStr);
+            const currentPrice = Number(currentPriceStr);
+            if (currentPrice > previousPrice) {
+                priceCell.className = "quotes-table-cell-price-green-text";
+            } else if (currentPrice < previousPrice) {
+                priceCell.className = "quotes-table-cell-price-red-text";
+            }
+        }
         priceCell.id = symbolInfo.lastPrice;
         priceCell.append(symbolInfo.lastPrice);
 
