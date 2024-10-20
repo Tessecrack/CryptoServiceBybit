@@ -13,11 +13,16 @@ const categoriesSelectElement = document.getElementById("categoriesSelect");
 const symbolsSelectElement = document.getElementById("symbolsSelect");
 const quotesTableElement = document.getElementById("quotes-table");
 
+
+const symbolPriceUpdater = new Worker(callbackSymbolUpdatePrice);
+
+
 categoriesSelectElement.addEventListener("change", async () => {
     const selectedCategory = categoriesSelectElement.options[categoriesSelectElement.selectedIndex];
     currentCategory = selectedCategory.value;
     await getSymbols(currentCategory);
     updateQuotesTable();
+    updateSymbolsSelectElement();
 });
 
 timeframesSelectElement.addEventListener("change", () => {
@@ -25,52 +30,49 @@ timeframesSelectElement.addEventListener("change", () => {
     currentTimeframe = selectedTimeframe.value;
 });
 
-function callbackSymbolUpdatePrice(msg) {
-    console.log(msg);
+async function callbackSymbolUpdatePrice(msg) {
+    await getSymbolsInfo();
+    updateQuotesTable();
 }
 
-async function getSymbols(category) {
-    const symbolsByCategory = cachedSymbols.get(category);
+async function getSymbols() {
+    const symbolsByCategory = cachedSymbols.get(currentCategory);
     if (symbolsByCategory) {
-        const mapSymbols = symbolsByCategory;
-        symbolsSelectElement.innerHTML = "";
-        for (const [key, value] of mapSymbols) {
-            addOptionToSelectElement(symbolsSelectElement, value.symbol);
-        }
+        return;
     } else {
-        const response = await fetch(`/api/tickers/${category}`, {
-            method: "GET",
-            headers: { "Accept": "application/json" }
-        });
-        if (response.ok === true) {
-            const responseJson = await response.json();
-            const list = responseJson.result.list;
-            list.sort(function (firstItem, secondItem) {
-                const firstNumber = Number(firstItem.lastPrice);
-                const secondNumber = Number(secondItem.lastPrice);
-                if (firstNumber > secondNumber) {
-                    return -1;
-                } else if (firstNumber < secondNumber) {
-                    return 1;
-                }
-                return 0;
-            });
-            const mapSymbols = new Map();
-            list.forEach((e) => {
-                if (e.symbol) {
-                    const symInfo = {
-                        lastPrice: e.lastPrice,
-                        symbol: e.symbol
-                    };
-                    mapSymbols.set(e.symbol, symInfo);
-                }
-            });
-            cachedSymbols.set(category, mapSymbols);
-            symbolsSelectElement.innerHTML = "";
-            for (const [key, value] of mapSymbols) {
-                addOptionToSelectElement(symbolsSelectElement, value.symbol);
+        await getSymbolsInfo(currentCategory);
+    }
+}
+
+async function getSymbolsInfo() {
+    const response = await fetch(`/api/tickers/${currentCategory}`, {
+        method: "GET",
+        headers: { "Accept": "application/json" }
+    });
+    if (response.ok === true) {
+        const responseJson = await response.json();
+        const list = responseJson.result.list;
+        list.sort(function (firstItem, secondItem) {
+            const firstNumber = Number(firstItem.lastPrice);
+            const secondNumber = Number(secondItem.lastPrice);
+            if (firstNumber > secondNumber) {
+                return -1;
+            } else if (firstNumber < secondNumber) {
+                return 1;
             }
-        }
+            return 0;
+        });
+        const mapSymbols = new Map();
+        list.forEach((e) => {
+            if (e.symbol) {
+                const symInfo = {
+                    lastPrice: e.lastPrice,
+                    symbol: e.symbol
+                };
+                mapSymbols.set(e.symbol, symInfo);
+            }
+        });
+        cachedSymbols.set(currentCategory, mapSymbols);
     }
 }
 
@@ -86,8 +88,6 @@ async function getLastPrice(category, symbol) {
     }
 }
 
-const symbolRequestWorker = new Worker(callbackSymbolUpdatePrice);
-
 function addOptionToSelectElement(selectElement, option) {
     const optionElement = document.createElement("option");
     optionElement.value = option;
@@ -95,11 +95,22 @@ function addOptionToSelectElement(selectElement, option) {
     selectElement.append(optionElement);
 }
 
+function updateSymbolsSelectElement() {
+    const symbolsByCategory = cachedSymbols.get(currentCategory);
+    if (symbolsByCategory) {
+        const mapSymbols = symbolsByCategory;
+        symbolsSelectElement.innerHTML = "";
+        for (const [key, value] of mapSymbols) {
+            addOptionToSelectElement(symbolsSelectElement, value.symbol);
+        }
+    }
+}
+
 function updateQuotesTable() {
-    const symbolsInfos = cachedSymbols.get(currentCategory);
+    const symbolsByCategory = cachedSymbols.get(currentCategory);
     quotesTableElement.innerHTML = "";
 
-    for (const [key, value] of symbolsInfos) {
+    for (const [key, value] of symbolsByCategory) {
         const row = document.createElement("div");
         row.id = "quotes-table-row";
 
@@ -124,8 +135,9 @@ function updateQuotesTable() {
 async function init() {
     currentCategory = "spot";
     await getSymbols(currentCategory);
-    updateQuotesTable()
-    symbolRequestWorker.runWorker();
+    updateQuotesTable();
+    updateSymbolsSelectElement();
+    symbolPriceUpdater.runWorker();
 }
 
 init();

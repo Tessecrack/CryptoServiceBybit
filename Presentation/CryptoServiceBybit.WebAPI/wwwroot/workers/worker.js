@@ -1,10 +1,9 @@
 ﻿export class Worker {
-    constructor(callback, requestFunction, timeoutMs) {
+    constructor(callback, timeoutMs) {
         this.m_isRun = false;
         this.m_isStopWorker = true;
 
         this.m_callback = callback;
-        this.m_requestFunction = requestFunction;
         this.m_timeoutMs = timeoutMs || 5000;
     }
 
