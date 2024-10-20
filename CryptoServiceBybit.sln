@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoServiceBybit.Desktop"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoServiceBybit.ConsoleUI", "UI\CryptoServiceBybit.ConsoleUI\CryptoServiceBybit.ConsoleUI.csproj", "{9D776678-6741-41CF-AED1-4215C1863252}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoServiceBybit.Processor", "Services\CryptoServiceBybit.Processor\CryptoServiceBybit.Processor.csproj", "{BE1673B5-9BA0-4AE8-A44D-DC4650FA0CE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{9D776678-6741-41CF-AED1-4215C1863252}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D776678-6741-41CF-AED1-4215C1863252}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D776678-6741-41CF-AED1-4215C1863252}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE1673B5-9BA0-4AE8-A44D-DC4650FA0CE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE1673B5-9BA0-4AE8-A44D-DC4650FA0CE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE1673B5-9BA0-4AE8-A44D-DC4650FA0CE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE1673B5-9BA0-4AE8-A44D-DC4650FA0CE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{531F959F-D45C-4673-92F4-A55894AAD803} = {3F07B6E8-4F91-4965-B29B-C9E97939C40C}
@@ -64,5 +70,6 @@ Global
 		{A4BF6D76-B42A-4D3C-9F3A-F9C0C4EFB1E9} = {EC51C494-D3A1-4B2A-B6E1-336D7CA2E537}
 		{9765BFB3-777E-471C-83E7-F0C615E27D32} = {9A9DA41D-37CD-4D9E-94CD-A1B4C5E089F5}
 		{9D776678-6741-41CF-AED1-4215C1863252} = {9A9DA41D-37CD-4D9E-94CD-A1B4C5E089F5}
+		{BE1673B5-9BA0-4AE8-A44D-DC4650FA0CE9} = {EC51C494-D3A1-4B2A-B6E1-336D7CA2E537}
 	EndGlobalSection
 EndGlobal
