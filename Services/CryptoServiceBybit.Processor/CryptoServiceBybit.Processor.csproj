@@ -11,8 +11,4 @@
     <ProjectReference Include="..\CryptoServiceBybit.ServiceBybit\CryptoServiceBybit.ServiceBybit.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Worker\" />
-  </ItemGroup>
-
 </Project>

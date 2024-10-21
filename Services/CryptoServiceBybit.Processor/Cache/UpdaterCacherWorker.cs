@@ -22,6 +22,8 @@ namespace CryptoServiceBybit.Processor.Cache
             _thread = new Thread(UpdateWork);
 
             _sender = sender;
+
+            Run();
         }
 
         public void Run()

@@ -10,5 +10,7 @@ namespace CryptoServiceBybit.Processor.Cache
         public TickersOptionInfo OptionInfo { get; set; }
 
         public TickersLinearInfo LinearInfo { get; set; }
+
+        public TickersInverseInfo InverseInfo { get; set; }
     }
 }

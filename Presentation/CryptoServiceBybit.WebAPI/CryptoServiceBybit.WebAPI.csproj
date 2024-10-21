@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\CryptoServiceBybit.Domain\CryptoServiceBybit.Domain.csproj" />
+    <ProjectReference Include="..\..\Services\CryptoServiceBybit.Processor\CryptoServiceBybit.Processor.csproj" />
     <ProjectReference Include="..\..\Services\CryptoServiceBybit.ServiceBybit\CryptoServiceBybit.ServiceBybit.csproj" />
   </ItemGroup>
 

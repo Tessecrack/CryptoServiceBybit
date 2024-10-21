@@ -1,5 +1,6 @@
 ﻿using CryptoServiceBybit.Domain.Models;
 using CryptoServiceBybit.Domain.Models.Tickers;
+using CryptoServiceBybit.Processor.Cache;
 using CryptoServiceBybit.Processor.Processors;
 using CryptoServiceBybit.ServiceBybit;
 
@@ -9,11 +10,13 @@ namespace CryptoServiceBybit.Processor.ClientWrapper
     {
         private readonly TClient _client;
         private TaskQueue _queue;
+        private SymbolsCacher _symbolCacher;
 
-        public RequestsSender(TClient client) 
+        public RequestsSender(SymbolsCacher symbolsCacher, TClient client) 
         { 
             _client = client;
             _queue = new TaskQueue();
+            _symbolCacher = symbolsCacher;
         }
 
         public async Task<AnnouncementsInfo> GetAnnouncements(string locale = "en-US", string type = "new_crypto", string tag = "Spot",
@@ -56,6 +59,7 @@ namespace CryptoServiceBybit.Processor.ClientWrapper
             return await _queue.Enqueue(() => _client.GetTickerOption(symbol, cancel));
         }
 
+
         public async Task<TickersSpotInfo> GetTickersSpot(CancellationToken cancel = default)
         {
             return await _queue.Enqueue(() => _client.GetTickersSpot(cancel)).ConfigureAwait(false);
@@ -74,6 +78,27 @@ namespace CryptoServiceBybit.Processor.ClientWrapper
         public async Task<TickersOptionInfo> GetTickersOption(CancellationToken cancel = default)
         {
             return await _queue.Enqueue(() => _client.GetTickersOption(cancel)).ConfigureAwait(false);
+        }
+
+
+        public async Task<TickersSpotInfo> GetTickersSpotFromCache(CancellationToken cancel = default)
+        {
+            return await _queue.Enqueue(() => Task.FromResult(_symbolCacher.SpotInfo)).ConfigureAwait(false);
+        }
+
+        public async Task<TickersInverseInfo> GetTickersInverseFromCache(CancellationToken cancel = default)
+        {
+            return await _queue.Enqueue(() => Task.FromResult(_symbolCacher.InverseInfo)).ConfigureAwait(false);
+        }
+
+        public async Task<TickersLinearInfo> GetTickersLinearFromCache(CancellationToken cancel = default)
+        {
+            return await _queue.Enqueue(() => Task.FromResult(_symbolCacher.LinearInfo)).ConfigureAwait(false);
+        }
+
+        public async Task<TickersOptionInfo> GetTickersOptionFromCache(CancellationToken cancel = default)
+        {
+            return await _queue.Enqueue(() => Task.FromResult(_symbolCacher.OptionInfo)).ConfigureAwait(false);
         }
     }
 }

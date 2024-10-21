@@ -13,6 +13,7 @@
 
         public async Task<T> Enqueue<T>(Func<Task<T>> task)
         {
+            await Task.Delay(100);
             await _semaphore.WaitAsync();
             try
             {
