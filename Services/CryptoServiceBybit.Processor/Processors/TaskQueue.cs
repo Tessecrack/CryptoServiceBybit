@@ -1,8 +1,11 @@
 ﻿namespace CryptoServiceBybit.Processor.Processors
 {
-    internal class TaskQueue
+    internal class TaskQueue : IDisposable
     {
         private SemaphoreSlim _semaphore;
+
+        private bool _disposed;
+
         public TaskQueue()
         {
             _semaphore = new SemaphoreSlim(1);
@@ -32,6 +35,11 @@
             {
                 _semaphore.Release();
             }
+        }
+
+        public void Dispose()
+        {
+            _disposed = true;
         }
     }
 }

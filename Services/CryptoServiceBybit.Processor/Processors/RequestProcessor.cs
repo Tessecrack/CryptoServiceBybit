@@ -1,38 +1,32 @@
-﻿using CryptoServiceBybit.Domain.Models.Tickers;
+﻿using CryptoServiceBybit.Processor.Cache;
+using CryptoServiceBybit.Processor.ClientWrapper;
 using CryptoServiceBybit.ServiceBybit;
 
 namespace CryptoServiceBybit.Processor.Processors
 {
-    public class RequestProcessor<TClient> where TClient : BaseClient
+    public class RequestProcessor<TClient> : IDisposable
+        where TClient : BaseClient
     {
-        private readonly TClient _client;
+        private SymbolsCacher _symbolsCacher;
 
-        private TaskQueue _queue;
+        private RequestsSender<BaseClient> _requestsSender;
+
+        private UpdaterCacherWorker _updateCacherWorker;
+
+        private bool disposedValue;
 
         public RequestProcessor(TClient client)
         {
-            _client = client;
-            _queue = new TaskQueue();
+            _symbolsCacher = new SymbolsCacher();
+            _requestsSender = new RequestsSender<BaseClient>(client);
+            _updateCacherWorker = new UpdaterCacherWorker(_symbolsCacher, _requestsSender);
         }
 
-        public async Task<TickersSpotInfo> GetTickersSpot(CancellationToken cancel = default)
-        {
-            return await _queue.Enqueue(() => _client.GetTickersSpot());
-        }
 
-        public async Task<TickersInverseInfo> GetTickersInverse(CancellationToken cancel = default)
+        public void Dispose()
         {
-            return await _queue.Enqueue(() => _client.GetTickersInverse());
-        }
-
-        public async Task<TickersLinearInfo> GetTickersLinear(CancellationToken cancel = default)
-        {
-            return await _queue.Enqueue(() => _client.GetTickersLinear());
-        }
-
-        public async Task<TickersOptionInfo> GetTickersOption(CancellationToken cancel = default)
-        {
-            return await _queue.Enqueue(() => _client.GetTickersOption());
+            _requestsSender.Dispose();
+            _updateCacherWorker.Dispose();
         }
     }
 }
