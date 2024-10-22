@@ -46,7 +46,7 @@ async function getSymbols() {
 }
 
 async function getSymbolsInfo() {
-    const response = await fetch(`/api/tickers/${currentCategory}`, {
+    const response = await fetch(`/api/home/tickers/${currentCategory}`, {
         method: "GET",
         headers: { "Accept": "application/json" }
     });
@@ -75,18 +75,6 @@ async function getSymbolsInfo() {
         });
         previousCachedSymbols = new Map(cachedSymbols);
         cachedSymbols.set(currentCategory, mapSymbols);
-    }
-}
-
-async function getLastPrice(category, symbol) {
-    const response = await fetch(`/api/market/kline/${category}/${symbol}?timeframe=1&limit=1`, {
-        method: "GET",
-        headers: { "Accept": "application/json" }
-    });
-
-    if (response.ok === true) {
-        const responseJson = await response.json();
-        console.log(responseJson);
     }
 }
 
